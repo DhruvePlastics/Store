@@ -28,9 +28,7 @@ DEBUG = True
 
 # settings.py
 
-ALLOWED_HOSTS = [
-    'dhruve-plastics.onrender.com'
-]
+ALLOWED_HOSTS = ['dhruve-plastics.onrender.com', '127.0.0.1', 'localhost']
 
 
 # Application definition
