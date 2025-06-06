@@ -1,0 +1,576 @@
+  {% extends 'base.html' %}
+
+  {% block title %}Home | Dhruve Plastics{% endblock %}
+
+  {% block content %}
+  <style>
+    /* CSS Variables for Consistency (Mirroring base.html or extending if needed) */
+    /* Ensure these match or extend base.html's :root variables for harmony */
+    :root {
+      /* Re-using colors from base.html for consistency is crucial */
+      /* --primary-gradient: linear-gradient(45deg, #8a75b8, #d8aed2, #e0d0b9, #e3a08a); */
+      /* --accent-color: #f77f00; */
+      /* --glass-bg: rgba(255, 255, 255, 0.8); */
+      /* --text-dark: #343a40; */
+      /* --text-light: #e9ecef; */
+      /* --secondary-text: #6c757d; */
+
+      --hero-gradient-overlay: linear-gradient(135deg, rgba(255,95,109,0.03), rgba(255,195,113,0.03)); /* Even lighter overlay for darker base */
+      --card-shadow: 0 8px 20px rgba(0, 0, 0, 0.12); /* Slightly more prominent initial shadow */
+      --hover-shadow: 0 16px 30px rgba(0, 0, 0, 0.25); /* More pronounced hover shadow for darker base */
+      --transition-fast: all 0.2s ease-out;
+      --transition-medium: all 0.3s ease-out;
+      /* Helper for dynamic RGB values from accent color */
+      /* For production, consider using a CSS preprocessor or define RGB values directly in JS if needed */
+      --accent-color-rgb-values: 247, 127, 0; /* RGB values of #f77f00 */
+    }
+
+    /* Hero Section */
+    #hero {
+      position: relative;
+      text-align: center;
+      padding: 6rem 1rem;
+      margin-bottom: 4rem;
+      background: rgba(255, 255, 255, 0.75); /* Slightly less opaque for better contrast */
+      border-radius: 1.5rem;
+      overflow: hidden;
+      box-shadow: var(--card-shadow); /* Apply consistent shadow */
+      border: 1px solid rgba(255, 255, 255, 0.3); /* Slightly more visible border */
+      backdrop-filter: blur(10px) saturate(150%); /* Enhance frosted effect */
+    }
+    /* More dynamic hero background pattern */
+    #hero::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background:
+        radial-gradient(ellipse at top left, var(--accent-color) 0%, transparent 40%),
+        radial-gradient(ellipse at bottom right, #d8aed2 0%, transparent 40%); /* Using a color from the darker base gradient */
+      opacity: 0.08; /* Very subtle against darker background */
+      z-index: -1;
+    }
+    #hero h1 {
+      font-size: clamp(2.8rem, 5vw, 4.5rem); /* Slightly larger */
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+      background: var(--primary-gradient); /* Use base gradient */
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-family: 'Montserrat', sans-serif; /* Consistent font */
+    }
+    #hero p {
+      font-size: clamp(1.05rem, 2vw, 1.35rem); /* Slightly larger */
+      color: var(--secondary-text); /* Use secondary text color */
+      max-width: 700px;
+      margin: 0 auto 2.5rem;
+      opacity: 0.95;
+      font-family: 'Lato', sans-serif; /* Consistent font */
+    }
+    .btn-cta {
+      padding: 0.9rem 2.8rem; /* Slightly larger padding */
+      font-size: 1.15rem; /* Slightly larger font */
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      border-radius: 50px;
+      transition: var(--transition-medium);
+      background-color: var(--accent-color); /* Use accent color */
+      color: white; /* White text on accent button */
+      border: none;
+      box-shadow: 0 4px 15px rgba(var(--accent-color-rgb-values), 0.45); /* Dynamic shadow with accent color, slightly stronger */
+    }
+    .btn-cta:hover {
+      transform: translateY(-5px); /* More pronounced lift */
+      box-shadow: 0 10px 25px rgba(var(--accent-color-rgb-values), 0.7); /* Stronger hover shadow */
+      filter: brightness(1.15); /* Slight brightness change on hover */
+    }
+
+    /* Highlights Section */
+    .highlight-card {
+      border: 1px solid rgba(255, 255, 255, 0.4); /* Slightly more visible border */
+      background: rgba(255, 255, 255, 0.92); /* Slightly less opaque */
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+      border-radius: 1.25rem; /* Consistent border radius */
+      height: 100%;
+      transition: var(--transition-medium);
+      box-shadow: var(--card-shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .highlight-card::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--primary-gradient); /* Use base gradient */
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease-out; /* Smoother transition */
+    }
+    .highlight-card:hover {
+      transform: translateY(-10px); /* More pronounced lift */
+      box-shadow: var(--hover-shadow);
+    }
+    .highlight-card:hover::after {
+      transform: scaleX(1);
+    }
+    .highlight-card i {
+      font-size: 2.8rem; /* Slightly larger icon */
+      margin-bottom: 1.5rem; /* More space below icon */
+      background: var(--primary-gradient); /* Use base gradient for icon */
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .highlight-card h5 {
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--text-dark);
+      font-family: 'Montserrat', sans-serif; /* Consistent font */
+    }
+    .highlight-card p {
+      color: var(--secondary-text); /* Use secondary text color */
+      font-size: 0.95rem;
+      margin-bottom: 0;
+      font-family: 'Lato', sans-serif; /* Consistent font */
+    }
+
+    /* Section Headers */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3rem; /* More spacing */
+    }
+    .section-header h2 {
+      font-weight: 700;
+      position: relative;
+      display: inline-block;
+      color: var(--text-dark);
+      font-family: 'Montserrat', sans-serif; /* Consistent font */
+      font-size: clamp(1.8rem, 3.5vw, 2.5rem); /* Responsive font size */
+    }
+    .section-header h2::after {
+      content: "";
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 60px; /* Slightly wider */
+      height: 4px; /* Slightly thicker */
+      background: var(--primary-gradient); /* Use base gradient */
+      border-radius: 3px;
+    }
+    .section-header .btn-outline-primary {
+      color: var(--accent-color);
+      border-color: var(--accent-color);
+      transition: var(--transition-medium);
+      font-weight: 600;
+    }
+    .section-header .btn-outline-primary:hover {
+      background-color: var(--accent-color);
+      color: white;
+    }
+
+    /* Featured Products */
+    #featured-products {
+      margin-bottom: 5rem;
+    }
+    .product-card {
+      border: 1px solid rgba(255, 255, 255, 0.4); /* Slightly more visible border */
+      border-radius: 1.25rem; /* Consistent border radius */
+      transition: var(--transition-medium);
+      height: 100%;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.97); /* Very slightly less opaque */
+      box-shadow: var(--card-shadow);
+    }
+    .product-card:hover {
+      transform: translateY(-10px); /* More pronounced lift */
+      box-shadow: var(--hover-shadow);
+    }
+    .product-card .card-img-top {
+      height: 240px; /* Slightly taller images */
+      object-fit: cover;
+      transition: transform 0.5s ease-out;
+    }
+    .product-card:hover .card-img-top {
+      transform: scale(1.08); /* More zoom effect */
+    }
+    .card-body {
+      padding: 1.75rem; /* More padding */
+      display: flex;
+      flex-direction: column;
+    }
+    .card-title {
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: var(--text-dark);
+      font-family: 'Montserrat', sans-serif; /* Consistent font */
+      font-size: 1.25rem;
+    }
+    .card-text {
+      color: var(--secondary-text); /* Use secondary text color */
+      font-size: 0.95rem;
+      margin-bottom: 1.25rem; /* More space */
+      flex-grow: 1;
+      font-family: 'Lato', sans-serif; /* Consistent font */
+    }
+    .price {
+      font-weight: 700;
+      color: var(--accent-color); /* Use accent color for price */
+      font-size: 1.3rem; /* Slightly larger price */
+    }
+    .btn-view {
+      border-radius: 50px;
+      padding: 0.6rem 1.8rem; /* Slightly larger */
+      font-weight: 500;
+      transition: var(--transition-fast);
+      border: 1px solid var(--accent-color);
+      color: var(--accent-color);
+      background-color: transparent;
+    }
+    .btn-view:hover {
+      background-color: var(--accent-color);
+      color: white;
+      box-shadow: 0 4px 10px rgba(var(--accent-color-rgb-values), 0.4); /* Slightly darker shadow on hover */
+    }
+
+    /* Testimonials */
+    #testimonials {
+      background: rgba(255, 255, 255, 0.75); /* Slightly less opaque for consistency */
+      padding: 4.5rem 2.5rem; /* More padding */
+      border-radius: 1.5rem;
+      margin-bottom: 5rem;
+      box-shadow: var(--card-shadow);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border */
+      backdrop-filter: blur(8px) saturate(150%);
+    }
+    /* More subtle quote marks */
+    #testimonials::before,
+    #testimonials::after {
+      content: "\201C"; /* Left double quotation mark */
+      position: absolute;
+      font-size: 8rem; /* Larger quote marks */
+      color: rgba(var(--accent-color-rgb-values), 0.08); /* Accent color with low opacity */
+      font-family: Georgia, serif;
+      line-height: 1;
+      z-index: 0;
+    }
+    #testimonials::before {
+      top: 10px;
+      left: 20px;
+      transform: rotate(0deg);
+    }
+    #testimonials::after {
+      content: "\201D"; /* Right double quotation mark */
+      bottom: 10px;
+      right: 20px;
+      transform: rotate(0deg); /* No rotation needed for right quote */
+    }
+    #testimonials h2 {
+      font-weight: 700;
+      margin-bottom: 3.5rem; /* More space below heading */
+      color: var(--text-dark);
+      font-family: 'Montserrat', sans-serif; /* Consistent font */
+      position: relative;
+      z-index: 1; /* Ensure heading is above pseudo-elements */
+    }
+    .carousel-item {
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+    .testimonial-text {
+      font-size: 1.2rem; /* Slightly larger text */
+      font-style: italic;
+      color: var(--text-dark);
+      max-width: 800px; /* Wider text area */
+      margin: 0 auto 1.5rem;
+      position: relative;
+      z-index: 1; /* Ensure text is above pseudo-elements */
+      line-height: 1.6;
+    }
+    .testimonial-author {
+      font-weight: 700;
+      color: var(--text-dark);
+      font-family: 'Montserrat', sans-serif; /* Consistent font */
+      font-size: 1.1rem;
+      margin-top: 1rem;
+    }
+    .rating i {
+      color: var(--accent-color); /* Use accent color for stars */
+    }
+    .carousel-control-prev,
+    .carousel-control-next {
+      width: 50px; /* Larger controls */
+      height: 50px; /* Larger controls */
+      background-color: rgba(var(--accent-color-rgb-values), 0.6); /* Accent color with transparency, slightly darker */
+      border-radius: 50%;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.95; /* Slightly less transparent */
+      transition: background-color 0.3s ease-out;
+    }
+    .carousel-control-prev:hover,
+    .carousel-control-next:hover {
+      background-color: var(--accent-color); /* Solid accent color on hover */
+      opacity: 1;
+    }
+    .carousel-control-prev {
+      left: 10px;
+    }
+    .carousel-control-next {
+      right: 10px;
+    }
+
+    /* About Snippet */
+    #about-snippet {
+      padding: 4rem 1.5rem;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.8); /* Slightly less opaque for consistency */
+      border-radius: 1.5rem;
+      margin-bottom: 3rem;
+      box-shadow: var(--card-shadow);
+      border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border */
+      backdrop-filter: blur(8px) saturate(150%);
+    }
+    #about-snippet h2 {
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      position: relative;
+      display: inline-block;
+      color: var(--text-dark);
+      font-family: 'Montserrat', sans-serif; /* Consistent font */
+      font-size: clamp(1.8rem, 3.5vw, 2.5rem); /* Responsive font size */
+    }
+    #about-snippet h2::after {
+      content: "";
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px; /* Thicker underline */
+      background: var(--primary-gradient); /* Use base gradient */
+      border-radius: 3px;
+    }
+    #about-snippet p {
+      color: var(--secondary-text); /* Use secondary text color */
+      max-width: 750px; /* Wider text area */
+      margin: 0 auto 2.5rem; /* More space below text */
+      font-size: 1.05rem;
+      line-height: 1.7;
+      font-family: 'Lato', sans-serif; /* Consistent font */
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 992px) { /* Adjust for larger tablets/smaller desktops */
+      #hero {
+        padding: 5rem 1rem;
+      }
+      .highlight-card {
+        padding: 2rem 1rem;
+      }
+      .product-card .card-img-top {
+        height: 200px; /* Adjust height for smaller screens */
+      }
+      .card-title {
+        font-size: 1.15rem;
+      }
+      .card-body {
+        padding: 1.25rem;
+      }
+      .btn-view {
+        padding: 0.4rem 1.2rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      #hero {
+        padding: 4rem 1rem;
+        margin-bottom: 3rem;
+      }
+      #hero h1 {
+        font-size: clamp(2rem, 8vw, 3.5rem);
+      }
+      #hero p {
+        font-size: clamp(0.95rem, 3vw, 1.15rem);
+        margin-bottom: 2rem;
+      }
+      .btn-cta {
+        padding: 0.7rem 2rem;
+        font-size: 1rem;
+      }
+      .highlight-card {
+        padding: 1.5rem 1rem;
+        margin-bottom: 1rem; /* Add margin between cards on mobile */
+      }
+      #highlights {
+        margin-bottom: 3rem;
+      }
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+      .section-header h2 {
+        font-size: clamp(1.6rem, 6vw, 2.2rem);
+      }
+      .product-card .card-img-top {
+        height: 180px;
+      }
+      #testimonials {
+        padding: 3.5rem 1.5rem;
+        margin-bottom: 3rem;
+      }
+      #testimonials::before,
+      #testimonials::after {
+        font-size: 6rem;
+      }
+      .testimonial-text {
+        font-size: 1.05rem;
+      }
+      .carousel-control-prev,
+      .carousel-control-next {
+        width: 40px;
+        height: 40px;
+        left: 5px;
+        right: 5px;
+      }
+      #about-snippet {
+        padding: 3rem 1rem;
+        margin-bottom: 2rem;
+      }
+    }
+  </style>
+
+  <main class="container">
+    <section id="hero" class="mb-5">
+      <div class="container">
+        <h1>Welcome to Dhruve Plastics</h1>
+        <p>
+          Discover handpicked, quality products crafted with care and innovation. Your
+          satisfaction is our highest priority—shop now and experience excellence.
+        </p>
+        <a href="{% url 'product-list' %}" class="btn btn-warning btn-cta">
+          Shop Now <i class="fas fa-arrow-right ms-2"></i>
+        </a>
+      </div>
+    </section>
+
+    <section id="highlights" class="row g-4 mb-5">
+      <div class="col-md-4">
+        <div class="highlight-card">
+          <i class="fas fa-shield-alt"></i>
+          <h5>Quality Guaranteed</h5>
+          <p>Each product undergoes rigorous testing to meet the highest standards.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="highlight-card">
+          <i class="fas fa-truck-fast"></i>
+          <h5>Speedy Delivery</h5>
+          <p>Get your order delivered quickly and reliably, anywhere in the country.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="highlight-card">
+          <i class="fas fa-headset"></i>
+          <h5>24/7 Support</h5>
+          <p>Our dedicated team is here to assist you around the clock.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="featured-products" class="mb-5">
+      <div class="section-header">
+        <h2>Featured Products</h2>
+        <a href="{% url 'product-list' %}" class="btn btn-outline-primary rounded-pill">
+          View All <i class="fas fa-chevron-right ms-1"></i>
+        </a>
+      </div>
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4"> {% for product in featured_products %}
+        <div class="col">
+          <div class="card product-card h-100">
+            {% if product.image %}
+            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" loading="lazy" />
+            {% else %}
+            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 240px;">
+              <i class="fas fa-image fa-3x text-muted"></i>
+            </div>
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">{{ product.name }}</h5>
+              <p class="card-text">{{ product.description|truncatewords:20 }}</p>
+              <div class="d-flex justify-content-between align-items-center mt-auto">
+                <span class="price">₹{{ product.price }}</span>
+                <a href="{% url 'product-detail' product.sku %}" class="btn btn-outline-warning btn-view">
+                  View <i class="fas fa-eye ms-1"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-4">
+          <div class="alert alert-info" role="alert">
+            <i class="fas fa-info-circle me-2"></i> No featured products available right now.
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section id="testimonials" class="mb-5">
+      <h2 class="text-center fw-bold mb-5">What Our Customers Say</h2>
+      <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          {% for testimonial in testimonials %}
+          <div class="carousel-item {% if forloop.first %}active{% endif %}">
+            <p class="testimonial-text">{{ testimonial.text }}</p>
+            <p class="testimonial-author">{{ testimonial.author }}</p>
+            <div class="rating mt-2">
+              {% for i in "12345"|make_list %}
+                {% if forloop.counter <= testimonial.rating %}
+                  <i class="fas fa-star"></i>
+                {% else %}
+                  <i class="far fa-star"></i>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </section>
+
+    <section id="about-snippet">
+      <h2>About Us</h2>
+      <p>
+        At Dhruve Plastics, we're driven by innovation and excellence. Since 2020, we've
+        combined creativity with quality to bring you products that enhance everyday
+        life. Thank you for being part of our journey.
+      </p>
+      <a href="{% url 'about' %}" class="btn btn-outline-primary rounded-pill">
+        Learn More <i class="fas fa-arrow-right ms-1"></i>
+      </a>
+    </section>
+  </main>
+  {% endblock %}
